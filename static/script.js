@@ -60,7 +60,7 @@ function drawGame() {
       // 根据地形绘制背景色：山、塔、空地
       if (cell.type === 1) {
         ctx.fillStyle = "#666666"; // 山
-      } else if (cell.type === 3) {
+      } else if (cell.type === 2) {
         ctx.fillStyle = "#ffffff"; // 塔
       } else {
         ctx.fillStyle = "#ffffff"; // 空地
@@ -105,7 +105,7 @@ function drawGame() {
             r * cellSize + cellSize / 2,
           );
         }
-      } else if (cell.type === 3) {
+      } else if (cell.type === 2) {
         // 1.半透明绘制塔Icon
         ctx.save();
         ctx.globalAlpha = 0.5;

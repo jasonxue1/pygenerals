@@ -6,7 +6,7 @@ def generate_map(width=30, height=30):
     """
     生成一个地图，其中：
     - 地图边界（最外圈）全部为山（1）
-    - 地图内部 5% 为塔（3）
+    - 地图内部 5% 为塔（2）
     - 地图内部 20% 为山（1）
     - 剩下为空地（0）
     """
@@ -20,7 +20,7 @@ def generate_map(width=30, height=30):
             else:
                 r = random.random()
                 if r < 0.05:
-                    row.append("3")  # 塔
+                    row.append("2")  # 塔
                 elif r < 0.05 + 0.20:
                     row.append("1")  # 山
                 else:

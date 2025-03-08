@@ -49,12 +49,12 @@ def init_game():
         for c in range(width):
             cell_type = grid[r][c]
             # 如果 cell 为塔，则初始兵力随机在 40～50 之间（未被占领时）
-            if cell_type == 3:
+            if cell_type == 2:
                 init_army = random.randint(40, 50)
             else:
                 init_army = 0
             cell = {
-                "type": cell_type,  # 0: 空地, 1: 山, 3: 塔
+                "type": cell_type,  # 0: 空地, 1: 山, 2: 塔
                 "owner": None,
                 "army": init_army,
                 "is_home": False,
@@ -109,7 +109,7 @@ def process_move(username, frm, direction):
         return False
 
     # 处理目标 cell
-    if cell_to["type"] == 3 and cell_to["owner"] is None:
+    if cell_to["type"] == 2 and cell_to["owner"] is None:
         if moving_army > cell_to["army"]:
             new_army = moving_army - cell_to["army"]
             cell_to["owner"] = username
@@ -165,7 +165,7 @@ def game_loop():
                 for c in range(game_state["width"]):
                     cell = game_state["cells"][r][c]
                     if cell["owner"] is not None and (
-                        cell["is_home"] or cell["type"] == 3
+                        cell["is_home"] or cell["type"] == 2
                     ):
                         cell["army"] += 1
             broadcast_state()
