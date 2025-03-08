@@ -1,23 +1,24 @@
-
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Generals-like Game</title>
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
-  <div id="login">
-    <input type="text" id="username" placeholder="Enter username">
-    <input type="text" id="room" placeholder="Enter room">
-    <button onclick="joinGame()">Join Game</button>
-    <p>使用 hjkl 键选择格子，使用 wasp 键移动</p>
-  </div>
-  <div id="game" style="display: none;">
-    <p id="turn-info"></p>
-    <canvas id="gameCanvas" width="800" height="600"></canvas>
-  </div>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
-  <script src="script.js"></script>
-</body>
+    <head>
+        <meta charset="UTF-8" />
+        <title>Generals-like Game</title>
+        <link rel="stylesheet" href="style.css" />
+    </head>
+    <body>
+        <div id="login">
+            <h1>Generals-like Game</h1>
+            <input type="text" id="username" placeholder="Enter username" />
+            <input type="text" id="room" placeholder="Enter room" />
+            <button onclick="joinGame()">Join Game</button>
+        </div>
+        <div id="game">
+            <p id="turn-info"></p>
+            <canvas id="gameCanvas" width="800" height="600"></canvas>
+        </div>
+        <!-- 引入 Socket.IO 客户端库 -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+        <!-- 引入项目脚本 -->
+        <script src="script.js"></script>
+    </body>
 </html>

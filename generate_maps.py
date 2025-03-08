@@ -5,22 +5,29 @@ import random
 def generate_map(width=30, height=30):
     """
     生成一个地图，其中：
-    - 5% 为塔（3）
-    - 20% 为山（1）
+    - 地图边界（最外圈）全部为山（1）
+    - 地图内部 5% 为塔（3）
+    - 地图内部 20% 为山（1）
     - 剩下为空地（0）
     """
     grid = []
-    for _ in range(height):
-        row = ""
-        for _ in range(width):
-            r = random.random()
-            if r < 0.05:
-                row += "3"
-            elif r < 0.05 + 0.20:
-                row += "1"
+    for y in range(height):
+        row = []
+        for x in range(width):
+            # 如果在边界上，则设为山（1）
+            if x == 0 or x == width - 1 or y == 0 or y == height - 1:
+                row.append("1")
             else:
-                row += "0"
-        grid.append(row)
+                r = random.random()
+                if r < 0.05:
+                    row.append("3")  # 塔
+                elif r < 0.05 + 0.20:
+                    row.append("1")  # 山
+                else:
+                    row.append("0")  # 空地
+        # 将行列表拼成字符串
+        grid.append("".join(row))
+    # 将行用换行符拼接
     return "\n".join(grid)
 
 

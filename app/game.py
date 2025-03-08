@@ -141,9 +141,9 @@ def broadcast_state():
 
 
 def game_loop():
-    # 每步 0.5 秒（即每秒 2 步）
+    # 每步 1 秒（即每秒 1 步）
     while game_state["running"]:
-        socketio.sleep(0.5)
+        socketio.sleep(1)
         with game_state["lock"]:
             # 重置所有 cell 的 moved 标记（新步开始）
             for r in range(game_state["height"]):
@@ -169,3 +169,10 @@ def game_loop():
                     ):
                         cell["army"] += 1
             broadcast_state()
+
+            if game_state["turn"] % 25 == 0:
+                for r in range(game_state["height"]):
+                    for c in range(game_state["width"]):
+                        cell = game_state["cells"][r][c]
+                        if cell["owner"] is not None:
+                            cell["army"] += 1

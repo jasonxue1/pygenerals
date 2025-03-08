@@ -35,6 +35,7 @@ function joinGame() {
   socket.on("connect", () => {
     socket.emit("join", { username, room });
   });
+  // 隐藏登录区，显示游戏区
   document.getElementById("login").style.display = "none";
   document.getElementById("game").style.display = "block";
 }
@@ -48,15 +49,19 @@ function drawGame() {
   const cellSize = 20;
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+  // 定义图标（使用 JetBrains Mono Nerd Font 中的图标代码）
+  const homeIcon = ""; // 家图标
+  const towerIcon = "󰄚"; // 塔图标
+
   // 绘制所有格子
   for (let r = 0; r < currentState.height; r++) {
     for (let c = 0; c < currentState.width; c++) {
       const cell = currentState.cells[r][c];
-      // 根据地形绘制背景：山、塔、空地
+      // 根据地形绘制背景色：山、塔、空地
       if (cell.type === 1) {
         ctx.fillStyle = "#666666"; // 山
       } else if (cell.type === 3) {
-        ctx.fillStyle = "#FFD700"; // 塔
+        ctx.fillStyle = "#ffffff"; // 塔
       } else {
         ctx.fillStyle = "#ffffff"; // 空地
       }
@@ -69,16 +74,70 @@ function drawGame() {
         ctx.fillRect(c * cellSize, r * cellSize, cellSize, cellSize);
       }
 
-      // 绘制兵力数字
-      ctx.fillStyle = "#000000";
-      ctx.font = "12px Arial";
+      // 绘制内容：
+      // 若 cell 是家，则绘制家图标；若 cell 是塔，则绘制塔图标；
+      // 否则若兵力不为 0，则显示兵力数字（兵力为 0时不显示）
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
-      ctx.fillText(
-        cell.army,
-        c * cellSize + cellSize / 2,
-        r * cellSize + cellSize / 2,
-      );
+
+      // 注意：下面的代码示例仅演示如何修改关键逻辑，可根据你的实际项目进行合并或微调
+      if (cell.is_home) {
+        // 1.半透明绘制家Icon
+        ctx.save(); // 保存当前状态
+        ctx.globalAlpha = 0.5; // 设置半透明
+        ctx.fillStyle = "#0000FF";
+        ctx.font = "14px 'JetBrains Mono Nerd Font'";
+        ctx.fillText(
+          homeIcon,
+          c * cellSize + cellSize / 2,
+          r * cellSize + cellSize / 2,
+        );
+        ctx.restore(); // 恢复绘制前状态（包括 alpha）
+
+        // 2.在家图标上再显示数字
+        //   如果家上也有 army 数值就显示；若你想任何情况都显示可以去掉判断
+        if (cell.army !== 0) {
+          ctx.fillStyle = "#000000";
+          ctx.font = "12px Arial";
+          ctx.fillText(
+            cell.army,
+            c * cellSize + cellSize / 2,
+            r * cellSize + cellSize / 2,
+          );
+        }
+      } else if (cell.type === 3) {
+        // 1.半透明绘制塔Icon
+        ctx.save();
+        ctx.globalAlpha = 0.5;
+        ctx.fillStyle = "#0000FF";
+        ctx.font = "14px 'JetBrains Mono Nerd Font'";
+        ctx.fillText(
+          towerIcon,
+          c * cellSize + cellSize / 2,
+          r * cellSize + cellSize / 2,
+        );
+        ctx.restore();
+
+        // 2.在塔图标上再显示数字
+        if (cell.army !== 0) {
+          ctx.fillStyle = "#000000";
+          ctx.font = "12px Arial";
+          ctx.fillText(
+            cell.army,
+            c * cellSize + cellSize / 2,
+            r * cellSize + cellSize / 2,
+          );
+        }
+      } else if (cell.army !== 0) {
+        // 其他非家/塔的格子仍按原逻辑显示数字
+        ctx.fillStyle = "#000000";
+        ctx.font = "12px Arial";
+        ctx.fillText(
+          cell.army,
+          c * cellSize + cellSize / 2,
+          r * cellSize + cellSize / 2,
+        );
+      }
 
       // 绘制网格边框
       ctx.strokeStyle = "#cccccc";
@@ -115,7 +174,7 @@ document.addEventListener("keydown", (e) => {
   if (!currentState) return;
   const key = e.key.toLowerCase();
 
-  // 使用 IJKL 键仅用于移动光标，不发送移动命令（允许光标移动到山上）
+  // 使用 IJKL 键仅用于移动光标，不发送移动指令
   if (["i", "j", "k", "l"].includes(key)) {
     let newRow = selectedCell.row;
     let newCol = selectedCell.col;
@@ -131,7 +190,7 @@ document.addEventListener("keydown", (e) => {
     selectedCell = { row: newRow, col: newCol };
     drawGame();
   }
-  // 使用 WASD 键发出移动命令，并更新光标位置（目标为山时不发送命令）
+  // 使用 WASD 键发出移动指令，并更新光标位置（目标为山时不发送指令）
   else if (["w", "a", "s", "d"].includes(key)) {
     let newRow = selectedCell.row;
     let newCol = selectedCell.col;
@@ -144,7 +203,6 @@ document.addEventListener("keydown", (e) => {
     } else if (key === "d") {
       newCol = Math.min(currentState.width - 1, selectedCell.col + 1);
     }
-    // 如果目标为山，则不发送移动指令，也不更新光标位置
     if (currentState.cells[newRow][newCol].type === 1) {
       return;
     }
