@@ -2,7 +2,7 @@ import os
 import random
 
 
-def generate_map(width=25, height=10):
+def generate_map(width=30, height=30):
     """
     生成一个地图，其中：
     - 5% 为塔（3）
