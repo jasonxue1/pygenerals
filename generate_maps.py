@@ -31,7 +31,7 @@ def generate_map(width=30, height=30):
     return "\n".join(grid)
 
 
-def get_next_map_filename(maps_dir):
+def get_next_map_filename(maps_dir) -> str:
     existing = []
     for filename in os.listdir(maps_dir):
         if filename.endswith(".map"):
