@@ -3,6 +3,7 @@ import random
 import threading
 from app import socketio
 
+
 # 全局游戏状态
 game_state = {
     "turn": 0,
